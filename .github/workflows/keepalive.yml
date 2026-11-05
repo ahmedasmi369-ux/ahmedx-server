@@ -1,0 +1,14 @@
+# Keeps the free Render server awake (it sleeps after 15 min without traffic and then needs ~50 s to wake),
+# so phones get published updates instantly. One free service running all month stays inside Render's
+# 750 free hours. GitHub may delay scheduled runs a few minutes; that's fine.
+name: keep-alive
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - run: curl -fsS --max-time 120 https://ahmedx-server.onrender.com/health
