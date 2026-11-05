@@ -37,7 +37,7 @@ function hello(body) {
   }));
   const report = {
     d: b.d, u: hex64(b.u) ? b.u : '', n: str(b.n, 40), s: str(b.s, 40), m: str(b.m, 60), a: str(b.a, 12), v: str(b.v, 20),
-    root: str(b.root, 30), e: events, seen: Date.now(),
+    root: str(b.root, 30), sec: str(b.sec, 40), e: events, seen: Date.now(),
   };
   if (!devices.has(b.d) && devices.size >= MAX_DEVICES) {
     const oldest = [...devices.entries()].sort((x, y) => x[1].seen - y[1].seen)[0];
