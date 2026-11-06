@@ -34,7 +34,11 @@ let pool = null; // Postgres when DATABASE_URL is set
 let dbError = '';
 if (process.env.DATABASE_URL) {
   const { Pool } = require('pg');
-  pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 4, idleTimeoutMillis: 30_000 });
+  // Neon links end with sslmode=require (pg checks the certificate fully) and channel_binding=require.
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL, max: 4, idleTimeoutMillis: 30_000,
+    enableChannelBinding: /channel_binding=require/.test(process.env.DATABASE_URL),
+  });
   pool.on('error', (e) => { dbError = e.message; });
   pool.query(`CREATE TABLE IF NOT EXISTS ao_devices (
       d TEXT PRIMARY KEY, report JSONB NOT NULL, events JSONB NOT NULL DEFAULT '[]', first BIGINT NOT NULL, seen BIGINT NOT NULL)`)
